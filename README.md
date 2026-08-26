@@ -25,7 +25,7 @@ The `$39.90` set is intentionally excluded until its official name and contents 
 Requires Node.js 22 or newer.
 
 ```bash
-npm ci
+npm install
 npm run dev
 ```
 
