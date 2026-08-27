@@ -1088,12 +1088,35 @@ button {
   padding: 72px max(5vw, 22px) 90px;
   border-top: 1px solid var(--line);
 }
-.menu-page-grid {
+.menu-category-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 20px;
+  scrollbar-width: none;
+}
+.menu-category-tabs::-webkit-scrollbar {
+  display: none;
+}
+.menu-category-tabs button {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: #655d56;
+  border-radius: 999px;
+  padding: 10px 15px;
+}
+.menu-category-tabs button.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.individual-menu-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
 }
-.menu-page {
+.individual-menu-item {
   display: block;
   overflow: hidden;
   border: 1px solid #ded7cc;
@@ -1104,27 +1127,27 @@ button {
   box-shadow: 0 12px 34px rgba(50, 35, 20, 0.06);
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.menu-page img {
+.individual-menu-item img {
   display: block;
   width: 100%;
-  aspect-ratio: 1.45 / 1;
+  aspect-ratio: 1 / 0.82;
   object-fit: contain;
-  background: #efeae2;
+  padding: 12px;
+  background: linear-gradient(145deg,#fff,#f1ece4);
 }
-.menu-page > span {
+.individual-menu-item > span {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 4px;
   padding: 13px 15px;
   font-size: 12px;
-  font-weight: 700;
 }
-.menu-page small {
+.individual-menu-item small {
   color: #7b726a;
   font-size: 10px;
   font-weight: 400;
 }
-.menu-page:hover {
+.individual-menu-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 42px rgba(50, 35, 20, 0.12);
 }
@@ -1132,23 +1155,23 @@ button {
   .full-menu-section {
     padding: 55px 16px;
   }
-  .menu-page-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .individual-menu-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
   }
-  .menu-page {
+  .individual-menu-item {
     border-radius: 12px;
   }
-  .menu-page > span {
+  .individual-menu-item > span {
     padding: 10px;
     font-size: 11px;
   }
-  .menu-page small {
+  .individual-menu-item small {
     font-size: 9px;
   }
 }
 @media (max-width: 390px) {
-  .menu-page img {
-    aspect-ratio: auto;
+  .individual-menu-item img {
+    padding: 8px;
   }
 }
