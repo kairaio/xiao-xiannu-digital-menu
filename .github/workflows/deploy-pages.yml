@@ -38,6 +38,8 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: gh-pages-dist
+      - name: Wait for legacy Pages build
+        run: sleep 30
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
