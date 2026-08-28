@@ -9,29 +9,7 @@ import {Label} from "@/components/ui/label";
 type Item={id:string;name:string;description:string;price:number;image:string;unit?:string}; type Line=Item&{qty:number;note:string}; type OT="Delivery"|"Pickup"|"Dine-In"; type Status="Order Received"|"Confirmed"|"Preparing"|"Ready for Delivery"|"Driver Assigned"|"On Delivery"|"Arriving"|"Delivered"|"Rejected";
 type Order={number:string;customer:string;phone:string;type:OT;address:string;location:string;table:string;requestedTime:string;notes:string;deliveryFee:number;items:Line[];subtotal:number;total:number;status:Status;driver:string;createdAt:string};
 
-const menu:Item[]=[
- {id:"A01",name:"Signature Luxury Sashimi Platter",description:"小仙女招牌轻奢刺身拼盘",price:198,image:"./assets/images/menu/A01.png"},
- {id:"A02",name:"Deluxe Sashimi Platter",description:"小仙女豪华刺身拼盘",price:155,image:"./assets/images/menu/A02.png"},
- {id:"A04",name:"Popular Assorted Sashimi Platter",description:"人气刺身拼盘",price:68,image:"./assets/images/menu/A05.png"},
- {id:"A06\u200B",name:"Five-Kind Sashimi",description:"刺身五品",price:58,image:"./assets/images/menu/A06.png"},
- {id:"A03",name:"Gold Assorted Sashimi Platter",description:"金牌中级刺身拼盘",price:68,image:"./assets/images/menu/A03.png"},
- {id:"A06",name:"Premium Assorted Sashimi Platter",description:"刺身拼盘上品",price:58,image:"./assets/images/menu/A06-premium-assorted-sashimi-platter.png"},
- {id:"A07",name:"Sata Fish Sashimi",description:"佐田鱼刺身",price:128,image:"./assets/images/menu/A07-sata-fish-sashimi.png"},
- {id:"A05",name:"Xiao Xiannu Assorted Sashimi Platter",description:"小仙女刺身拼盘",price:88,image:"./assets/images/menu/A05-xiao-xiannu-assorted-sashimi-platter.png"},
- {id:"A08",name:"Yellowtail Sashimi",description:"油甘鱼刺身",price:16.8,image:"./assets/images/menu/A08-yellowtail-sashimi.png"},
- {id:"A09",name:"Salmon Roe Sashimi",description:"三文鱼籽刺身",price:18,image:"./assets/images/menu/A09-salmon-roe-sashimi.png"},
- {id:"A21",name:"Wagyu Sashimi",description:"和牛刺身 · 和牛の刺身です",price:88,image:"./assets/images/menu/A21.png",unit:"/ 份"},
- {id:"A22",name:"Sake Abalone Sashimi",description:"清酒鲍鱼刺身 · 日本酒鮑の刺身です",price:18,image:"./assets/images/menu/A22.png",unit:"/ 只"},
- {id:"A27",name:"Scallop Sashimi",description:"带子刺身",price:12,image:"./assets/images/menu/A27-scallop-sashimi.png"},
- {id:"A31",name:"Ark Shell Sashimi",description:"赤贝刺身 · 赤貝の刺身です",price:25,image:"./assets/images/menu/A31.png",unit:"/ 只"},
- {id:"A35",name:"Russian Caviar (10g)",description:"俄罗斯鱼子酱 / 10g",price:58,image:"./assets/images/menu/A35.png",unit:"/ 份"},
- {id:"A36",name:"Premium Russian Caviar (300g)",description:"俄罗斯顶级鱼子酱 / 300g",price:198,image:"./assets/images/menu/A36.png",unit:"/ 份"},
- {id:"C01",name:"Alaskan King Crab",description:"阿拉斯加帝王蟹 · アラスカズワイガニです",price:258,image:"./assets/images/menu/C01.png",unit:"/ KG"},
- {id:"A39",name:"Alaskan King Crab Leg Sashimi (Small)",description:"阿拉斯加帝王蟹脚刺身（小份） · アラスカ帝王蟹足の刺身",price:238,image:"./assets/images/menu/A39.png",unit:"/ 份"},
- {id:"C66",name:"Shima Aji (Striped Jack)",description:"池鱼王 · 池の魚の王様",price:22,image:"./assets/images/menu/C66.png",unit:"/ 份"},
- {id:"A42",name:"Baby Lobster Sashimi",description:"小青龙刺身 · 小青龍刺しです",price:68,image:"./assets/images/menu/A42.png",unit:"/ 份"},
- {id:"A43",name:"Sea Urchin Sashimi",description:"海胆刺身 · ウニの刺身です",price:88,image:"./assets/images/menu/A43.png",unit:"/ 份"}
-];
+const menu:Item[]=[];
 
 const statuses:Status[]=["Order Received","Confirmed","Preparing","Ready for Delivery","Driver Assigned","On Delivery","Arriving","Delivered"];
 const money=(n:number)=>`$${n.toFixed(2)}`; const blank={customer:"",phone:"",type:"Delivery" as OT,address:"",location:"",table:"",requestedTime:"",notes:"",deliveryFee:"0.00"};
