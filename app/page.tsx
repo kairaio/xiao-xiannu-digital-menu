@@ -9,17 +9,7 @@ import {Label} from "@/components/ui/label";
 type Item={id:string;name:string;description:string;price:number;image:string}; type Line=Item&{qty:number;note:string}; type OT="Delivery"|"Pickup"|"Dine-In"; type Status="Order Received"|"Confirmed"|"Preparing"|"Ready for Delivery"|"Driver Assigned"|"On Delivery"|"Arriving"|"Delivered"|"Rejected";
 type Order={number:string;customer:string;phone:string;type:OT;address:string;location:string;table:string;requestedTime:string;notes:string;deliveryFee:number;items:Line[];subtotal:number;total:number;status:Status;driver:string;createdAt:string};
 
-const menu:Item[]=[
- {id:"p32",name:"Pork Neck Set Meal",description:"猪颈肉套餐",price:9.9,image:"./assets/images/menu/menu-32.webp"},
- {id:"p33",name:"Beef Tongue Set Meal",description:"牛舌套餐",price:9.9,image:"./assets/images/menu/menu-33.webp"},
- {id:"p34",name:"Chicken Chop Set Meal",description:"鸡扒套餐",price:9.9,image:"./assets/images/menu/menu-34.webp"},
- {id:"p35",name:"Beef & Egg Rice Set Meal",description:"滑蛋牛肉饭套餐",price:9.9,image:"./assets/images/menu/menu-35.webp"},
- {id:"p36",name:"Tomato Beef Rice Set Meal",description:"番茄牛肉饭套餐",price:9.9,image:"./assets/images/menu/menu-36.webp"},
- {id:"p37",name:"Char Siu Ramen Set Meal",description:"叉烧拉面套餐",price:9.9,image:"./assets/images/menu/menu-37.webp"},
- {id:"p38",name:"Curry Pork Chop Set Meal",description:"咖喱猪扒套餐",price:9.9,image:"./assets/images/menu/menu-38.webp"},
- {id:"p39",name:"Chicken Chop Set Meal",description:"鸡扒套餐",price:9.9,image:"./assets/images/menu/menu-39.webp"},
- {id:"p40",name:"Stone Pot Mixed Rice",description:"石锅拌饭",price:9.9,image:"./assets/images/menu/menu-40.webp"}
-];
+const menu:Item[]=[];
 
 const statuses:Status[]=["Order Received","Confirmed","Preparing","Ready for Delivery","Driver Assigned","On Delivery","Arriving","Delivered"];
 const money=(n:number)=>`$${n.toFixed(2)}`; const blank={customer:"",phone:"",type:"Delivery" as OT,address:"",location:"",table:"",requestedTime:"",notes:"",deliveryFee:"0.00"};
