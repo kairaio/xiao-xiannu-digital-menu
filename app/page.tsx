@@ -10,6 +10,11 @@ type Item={id:string;name:string;description:string;price:number;image:string}; 
 type Order={number:string;customer:string;phone:string;type:OT;address:string;location:string;table:string;requestedTime:string;notes:string;deliveryFee:number;items:Line[];subtotal:number;total:number;status:Status;driver:string;createdAt:string};
 
 const menu:Item[]=[
+ {id:"A01",name:"Signature Luxury Sashimi Platter",description:"小仙女招牌轻奢刺身拼盘",price:198,image:"./assets/images/menu/A01.png"},
+ {id:"A02",name:"Deluxe Sashimi Platter",description:"小仙女豪华刺身拼盘",price:155,image:"./assets/images/menu/A02.png"},
+ {id:"A04",name:"Popular Assorted Sashimi Platter",description:"人气刺身拼盘",price:68,image:"./assets/images/menu/A05.png"},
+ {id:"A06\u200B",name:"Five-Kind Sashimi",description:"刺身五品",price:58,image:"./assets/images/menu/A06.png"},
+ {id:"A03",name:"Gold Assorted Sashimi Platter",description:"金牌中级刺身拼盘",price:68,image:"./assets/images/menu/A03.png"},
  {id:"A06",name:"Premium Assorted Sashimi Platter",description:"刺身拼盘上品",price:58,image:"./assets/images/menu/A06-premium-assorted-sashimi-platter.png"},
  {id:"A07",name:"Sata Fish Sashimi",description:"佐田鱼刺身",price:128,image:"./assets/images/menu/A07-sata-fish-sashimi.png"},
  {id:"A05",name:"Xiao Xiannu Assorted Sashimi Platter",description:"小仙女刺身拼盘",price:88,image:"./assets/images/menu/A05-xiao-xiannu-assorted-sashimi-platter.png"},
