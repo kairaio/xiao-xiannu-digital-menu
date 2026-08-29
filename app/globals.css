@@ -982,7 +982,13 @@ button {
     grid-template-columns: 1fr;
   }
   .photo {
-    height: 240px;
+    height: auto;
+    min-height: 0;
+  }
+  .photo img {
+    display: block;
+    height: auto;
+    object-fit: contain;
   }
   .card-copy {
     min-height: 230px;
@@ -1066,7 +1072,7 @@ button {
     font-size: 42px;
   }
   .menu-card .photo {
-    height: 215px;
+    height: auto;
   }
   .card-actions {
     align-items: flex-end;
