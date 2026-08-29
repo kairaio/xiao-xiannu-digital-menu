@@ -1330,6 +1330,10 @@ body {
   padding: 96px max(4vw, 22px) 120px;
 }
 
+.menu-category + .menu-category {
+  margin-top: 96px;
+}
+
 .menu-section,
 .demo-note,
 .workspace,

@@ -9,7 +9,7 @@ import {Label} from "@/components/ui/label";
 type Item={id:string;name:string;description:string;price:number;image:string;unit?:string}; type Line=Item&{qty:number;note:string}; type OT="Delivery"|"Pickup"|"Dine-In"; type Status="Order Received"|"Confirmed"|"Preparing"|"Ready for Delivery"|"Driver Assigned"|"On Delivery"|"Arriving"|"Delivered"|"Rejected";
 type Order={number:string;customer:string;phone:string;type:OT;address:string;location:string;table:string;requestedTime:string;notes:string;deliveryFee:number;items:Line[];subtotal:number;total:number;status:Status;driver:string;createdAt:string};
 
-const menu:Item[]=[
+const sashimiMenu:Item[]=[
  {id:"A01",name:"Signature Luxury Sashimi Platter",description:"小仙女招牌轻奢刺身拼盘",price:198,image:"./assets/images/menu/A01.png",unit:"/ portion"},
  {id:"A02",name:"Deluxe Sashimi Platter",description:"小仙女豪华刺身拼盘",price:155,image:"./assets/images/menu/A02.png",unit:"/ portion"},
  {id:"A03",name:"Gold Assorted Sashimi Platter",description:"金尊中级刺身拼盘",price:68,image:"./assets/images/menu/A03.png",unit:"/ portion"},
@@ -48,6 +48,51 @@ const menu:Item[]=[
  {id:"C66",name:"Aji King Sashimi",description:"池鱼王刺身",price:22,image:"./assets/images/menu/C66.png",unit:"/ portion"},
 ];
 
+const sushiMenu:Item[]=[
+ {id:"B04",name:"Sushi Set C",description:"寿司套餐 C",price:22,image:"./assets/images/menu/B04.png",unit:"/ portion"},
+ {id:"B05",name:"Sushi Set S",description:"寿司套餐 S",price:10.8,image:"./assets/images/menu/B05.png",unit:"/ portion"},
+ {id:"B06",name:"Sushi Set D",description:"寿司套餐 D",price:18,image:"./assets/images/menu/B06.png",unit:"/ portion"},
+ {id:"B07",name:"Sushi Set E",description:"寿司套餐 E",price:15.8,image:"./assets/images/menu/B07.png",unit:"/ portion"},
+ {id:"B08",name:"Sushi Set G",description:"寿司套餐 G",price:16.8,image:"./assets/images/menu/B08.png",unit:"/ portion"},
+ {id:"B09",name:"Sushi Set H",description:"寿司套餐 H",price:15.8,image:"./assets/images/menu/B09.png",unit:"/ portion"},
+ {id:"B57",name:"Thick-Cut Eel Sushi",description:"厚切鳗鱼寿司",price:8.8,image:"./assets/images/menu/B57.png",unit:"/ portion"},
+ {id:"B58",name:"Wagyu Sushi",description:"和牛寿司",price:18,image:"./assets/images/menu/B58.png",unit:"/ portion"},
+ {id:"B60",name:"Fire-Seared Mango Foie Gras Sushi",description:"火炙香芒鹅肝寿司",price:8,image:"./assets/images/menu/B60.png",unit:"/ portion"},
+ {id:"B62",name:"Fire-Seared Salmon Belly Sushi",description:"火炙三文鱼腩寿司",price:5,image:"./assets/images/menu/B62.png",unit:"/ portion"},
+ {id:"B63",name:"Tuna Belly Sushi",description:"金枪鱼腩寿司",price:23,image:"./assets/images/menu/B63.png",unit:"/ portion"},
+ {id:"B64",name:"Cooked Shrimp Sushi",description:"熟虾寿司",price:4,image:"./assets/images/menu/B64.png",unit:"/ portion"},
+ {id:"B65",name:"Inari Sushi",description:"腐皮寿司",price:6,image:"./assets/images/menu/B65.png",unit:"/ portion"},
+ {id:"B66",name:"Octopus Sushi",description:"八爪鱼寿司",price:4,image:"./assets/images/menu/B66.png",unit:"/ portion"},
+ {id:"B68",name:"Salmon Roe Flower Sushi",description:"鲑籽三文鱼花之恋",price:6,image:"./assets/images/menu/B68.png",unit:"/ portion"},
+ {id:"B69",name:"Salmon Sushi",description:"三文鱼寿司",price:4.5,image:"./assets/images/menu/B69.png",unit:"/ portion"},
+ {id:"B70",name:"Salmon Belly Sushi",description:"三文鱼腩寿司",price:5,image:"./assets/images/menu/B70.png",unit:"/ portion"},
+ {id:"B71",name:"Fire-Seared Fish Skin Sushi",description:"火炙鱼皮寿司",price:4.5,image:"./assets/images/menu/B71.png",unit:"/ portion"},
+ {id:"B72",name:"Yellowtail Sushi",description:"油甘鱼寿司",price:5,image:"./assets/images/menu/B72.png",unit:"/ portion"},
+ {id:"B73",name:"Tuna Sushi",description:"金枪鱼寿司",price:13,image:"./assets/images/menu/B73.png",unit:"/ portion"},
+ {id:"B74",name:"Mango Salmon Sushi",description:"香芒三文鱼寿司",price:5,image:"./assets/images/menu/B74.png",unit:"/ portion"},
+ {id:"B75",name:"Avocado Salmon Sushi",description:"牛油果三文鱼寿司",price:5,image:"./assets/images/menu/B75.png",unit:"/ portion"},
+ {id:"B76",name:"Fire-Seared Foie Gras Sushi",description:"火炙鹅肝寿司",price:8,image:"./assets/images/menu/B76.png",unit:"/ portion"},
+ {id:"B78",name:"Avocado Flower Sushi",description:"牛油果花之恋",price:6,image:"./assets/images/menu/B78.png",unit:"/ portion"},
+ {id:"B79",name:"Fire-Seared Salmon Sushi",description:"火炙三文鱼寿司",price:4,image:"./assets/images/menu/B79.png",unit:"/ portion"},
+ {id:"B80",name:"Sweet Shrimp Sushi",description:"甜虾寿司",price:6,image:"./assets/images/menu/B80.png",unit:"/ portion"},
+ {id:"B81",name:"Cheese Eel Sushi",description:"芝士鳗鱼寿司",price:5,image:"./assets/images/menu/B81.png",unit:"/ portion"},
+ {id:"B82",name:"Cheese Crab Stick Sushi",description:"芝士蟹棒寿司",price:5.5,image:"./assets/images/menu/B82.png",unit:"/ portion"},
+ {id:"B83",name:"Fire-Seared Crab Stick Sushi",description:"火炙蟹棒寿司",price:6,image:"./assets/images/menu/B83.png",unit:"/ portion"},
+ {id:"B84",name:"Fire-Seared Eel Sushi",description:"火炙鳗鱼寿司",price:4,image:"./assets/images/menu/B84.png",unit:"/ portion"},
+ {id:"B85",name:"Cheese Salmon Sushi",description:"芝士三文鱼寿司",price:5,image:"./assets/images/menu/B85.png",unit:"/ portion"},
+ {id:"B86",name:"Cheese Cooked Shrimp Sushi",description:"芝士熟虾寿司",price:4.5,image:"./assets/images/menu/B86.png",unit:"/ portion"},
+ {id:"B87",name:"Fire-Seared Scallop Sushi",description:"火炙带子寿司",price:6.5,image:"./assets/images/menu/B87.png",unit:"/ portion"},
+ {id:"B88",name:"Arctic Surf Clam Sushi",description:"北极贝寿司",price:4,image:"./assets/images/menu/B88.png",unit:"/ portion"},
+ {id:"B89",name:"Herring Roe Sushi",description:"希鲮鱼寿司",price:4,image:"./assets/images/menu/B89.png",unit:"/ portion"},
+ {id:"B90",name:"Tamagoyaki Sushi",description:"玉子烧寿司",price:3.5,image:"./assets/images/menu/B90.png",unit:"/ portion"},
+];
+
+const menu=[...sashimiMenu,...sushiMenu];
+const menuCategories=[
+ {name:"Sashimi",eyebrow:"SASHIMI SELECTION",description:"Fresh sashimi selections. Every item below can be added directly to the cart.",items:sashimiMenu},
+ {name:"Sushi",eyebrow:"SUSHI SELECTION",description:"Nigiri and sushi sets prepared to order. Every item below is connected to the same cart and checkout.",items:sushiMenu},
+];
+
 const statuses:Status[]=["Order Received","Confirmed","Preparing","Ready for Delivery","Driver Assigned","On Delivery","Arriving","Delivered"];
 const money=(n:number)=>`$${n.toFixed(2)}`; const blank={customer:"",phone:"",type:"Delivery" as OT,address:"",location:"",table:"",requestedTime:"",notes:"",deliveryFee:"0.00"};
 function message(o:Order){const lines=o.items.flatMap(i=>[`[${i.id}] ${i.name}`,`Unit price: ${money(i.price)}${i.unit?` ${i.unit}`:""}`,`Quantity: ${i.qty}`,`Item subtotal: ${money(i.price*i.qty)}`,...(i.note?[`Item note: ${i.note}`]:[]),""]);return ["🍣 NEW ORDER — 小仙女","",`Order No: #${o.number}`,"","Customer:",o.customer,"","Phone:",o.phone,"","Order Type:",o.type,"",...(o.type==="Delivery"?["ADDRESS:",o.address,"","LOCATION:",o.location||"Not provided",""]:[]),...(o.type==="Dine-In"?["TABLE:",o.table,""]:[]),...(o.requestedTime?["REQUESTED TIME:",o.requestedTime,""]:[]),"ORDER:","",...lines,"--------------------","",`Subtotal: ${money(o.subtotal)}`,`Delivery Fee: ${money(o.deliveryFee)}`,`TOTAL: ${money(o.total)}`,"","NOTES:",o.notes||"None","","Please confirm this order.","Thank you."].join("\n")}
@@ -68,7 +113,7 @@ export default function Home(){
   <header className="topbar"><a className="brand" href="#top"><span>小仙女</span><small>JAPANESE CUISINE</small></a><nav>{["menu","track","driver","admin"].map(v=><button key={v} onClick={()=>go(v)}>{v}</button>)}</nav><Sheet open={cartOpen} onOpenChange={setCartOpen}><SheetTrigger asChild><button className="cart-button"><ShoppingBag size={18}/><span>Cart</span><b>{count}</b></button></SheetTrigger><SheetContent className="cart-sheet"><SheetHeader><SheetTitle>Your order</SheetTitle></SheetHeader><Cart cart={cart} qty={qty} note={(id,note)=>setCart(cart.map(x=>x.id===id?{...x,note}:x))} subtotal={subtotal} checkout={beginCheckout}/></SheetContent></Sheet></header>
   <Tabs value={view} onValueChange={go}><TabsList className="mobile-tabs"><TabsTrigger value="menu"><Utensils/>Menu</TabsTrigger><TabsTrigger value="track"><MapPin/>Track</TabsTrigger><TabsTrigger value="driver"><Bike/>Driver</TabsTrigger><TabsTrigger value="admin"><Store/>Admin</TabsTrigger></TabsList>
    <TabsContent value="menu"><section id="top" className="hero"><img src="./hero-sushi.jpg" alt="Japanese dishes prepared by Xiao Xiannu Japanese Restaurant"/><div className="hero-shade"/><div className="hero-copy"><p className="eyebrow">小仙女日式料理</p><h1>小仙女 <i>Japanese</i><br/>Restaurant</h1><p>Japanese Cuisine</p><div className="service-line"><span><Clock3/>Open 24 Hours</span><span>Dine-In • Pickup • Delivery</span></div><div className="hero-actions"><a href="#menu">Order Now</a><a className="ghost" href="#menu">View Menu <ChevronDown/></a></div></div></section>
-   <section id="menu" className="menu-section"><div className="section-heading"><div><p className="eyebrow red">ORDERING MENU</p><h2>Sashimi</h2></div><p>Fresh sashimi selections. Every item below can be added directly to the cart.</p></div><div className="menu-grid">{menu.map(item=>{const n=cart.find(x=>x.id===item.id)?.qty||0;return <article className="menu-card" key={item.id}><div className="photo"><img src={item.image} alt={`${item.name} — ${item.description}`} loading="lazy"/><span>{item.id}</span></div><div className="card-copy"><div><h3>{item.name}</h3><p>{item.description}</p></div><strong>{money(item.price)}{item.unit&&<small> {item.unit}</small>}</strong><div className="card-actions">{n?<Qty value={n} onChange={v=>qty(item,v)}/>:<span className="fresh">Made to order</span>}<button type="button" onClick={()=>add(item)}><Plus size={17}/> Add to Cart</button></div></div></article>})}</div></section>
+   <section id="menu" className="menu-section">{menuCategories.map(category=><div className="menu-category" key={category.name}><div className="section-heading"><div><p className="eyebrow red">{category.eyebrow}</p><h2>{category.name}</h2></div><p>{category.description}</p></div><div className="menu-grid">{category.items.map(item=>{const n=cart.find(x=>x.id===item.id)?.qty||0;return <article className="menu-card" key={item.id}><div className="photo"><img src={item.image} alt={`${item.name} — ${item.description}`} loading="lazy"/><span>{item.id}</span></div><div className="card-copy"><div><h3>{item.name}</h3><p>{item.description}</p></div><strong>{money(item.price)}{item.unit&&<small> {item.unit}</small>}</strong><div className="card-actions">{n?<Qty value={n} onChange={v=>qty(item,v)}/>:<span className="fresh">Made to order</span>}<button type="button" onClick={()=>add(item)}><Plus size={17}/> Add to Cart</button></div></div></article>})}</div></div>)}</section>
    <section className="demo-note"><div><p className="eyebrow red">MENU IMAGE QC</p><h2>Individual menu images.</h2></div><div className="feature-grid"><span><b>Menu</b>Each dish is displayed as a separate image with its code, name and price.</span><span><b>Ordering</b>Add items to cart and continue to checkout.</span></div></section></TabsContent>
    <TabsContent value="track"><Tracking order={active||orders[0]} copy={async()=>{if(active){await navigator.clipboard.writeText(`${location.origin}${location.pathname}?view=track&order=${active.number}`);setNotice("Tracking link copied.")}}} send={send}/></TabsContent>
    <TabsContent value="driver"><Driver orders={orders} change={change}/></TabsContent><TabsContent value="admin"><Admin orders={orders} change={change} track={o=>{setActive(o);go("track",o)}}/></TabsContent>
