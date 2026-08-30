@@ -40,7 +40,28 @@ function installPngDownloadFix(){
  });
 }
 
+function installAdminStatusOptions(){
+ const enhance=()=>{
+  document.querySelectorAll(".admin-controls select").forEach(node=>{
+   const select=node as HTMLSelectElement;
+   const ready=[...select.options].find(option=>option.value==="Ready for Delivery");
+   if(ready)ready.textContent="Ready";
+   const served=[...select.options].find(option=>option.value==="Delivered");
+   if(served)served.textContent="Served";
+   if(![...select.options].some(option=>option.value==="Paid")){
+    const paid=document.createElement("option");
+    paid.value="Paid";
+    paid.textContent="Selesai Dibayar";
+    select.appendChild(paid);
+   }
+  });
+ };
+ enhance();
+ new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});
+}
+
 installPngDownloadFix();
+installAdminStatusOptions();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
  <React.StrictMode>{isBarcodeTable?<BarcodeMenu/>:<OnlineHome/>}</React.StrictMode>,
