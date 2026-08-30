@@ -9,6 +9,7 @@ const tableParam=params.get("table")||"";
 const isTableQr=/^[A-Za-z0-9-]{1,12}$/.test(tableParam);
 
 function setControlledInput(input:HTMLInputElement,value:string){
+ if(input.value===value)return;
  const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value")?.set;
  setter?.call(input,value);
  input.dispatchEvent(new Event("input",{bubbles:true}));
@@ -54,15 +55,15 @@ function processOnlineCheckout(form:HTMLFormElement){
   if(label==="Dine-In")option.style.display="none";
  });
  const submit=form.querySelector<HTMLButtonElement>('button[type="submit"]');
- if(submit)submit.textContent="CONFIRM ORDER";
+ if(submit&&submit.textContent!=="CONFIRM ORDER")submit.textContent="CONFIRM ORDER";
 }
 
 function processQrCheckout(form:HTMLFormElement){
  form.classList.add("qr-table-checkout");
  const title=form.querySelector(".modal-title h2");
- if(title)title.textContent="CONFIRM YOUR ORDER";
+ if(title&&title.textContent!=="CONFIRM YOUR ORDER")title.textContent="CONFIRM YOUR ORDER";
  const eyebrow=form.querySelector(".modal-title .eyebrow");
- if(eyebrow)eyebrow.textContent="ORDER TYPE";
+ if(eyebrow&&eyebrow.textContent!=="ORDER TYPE")eyebrow.textContent="ORDER TYPE";
 
  const identityInputs=[...form.querySelectorAll<HTMLInputElement>(".form-grid input")];
  identityInputs.forEach(input=>{input.required=false;input.removeAttribute("required")});
@@ -129,7 +130,7 @@ function processQrCheckout(form:HTMLFormElement){
   total.parentElement?.insertBefore(summary,total);
  }
  const submit=form.querySelector<HTMLButtonElement>('button[type="submit"]');
- if(submit)submit.textContent="CONFIRM ORDER";
+ if(submit&&submit.textContent!=="CONFIRM ORDER")submit.textContent="CONFIRM ORDER";
 
  const setQrIdentity=(mode:"Dine-In"|"Take Away")=>{
   if(!nameInput)return;
