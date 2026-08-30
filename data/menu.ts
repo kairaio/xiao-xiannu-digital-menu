@@ -8,6 +8,16 @@ for(const match of legacySource.matchAll(rx)){
  parsed.push({id,name,description,price:Number(price),image,unit:unit||undefined,category:id.startsWith("B")?"Sushi":"Sashimi"});
 }
 export const menu=parsed;
-export const categories=["Sashimi","Sushi"];
+export const categories=[
+ "Sashimi",
+ "Sushi",
+ "Salad & Appetizers",
+ "Teppanyaki & Grill",
+ "Skewers",
+ "Tempura & Fried",
+ "Hotpot & Soup",
+ "Noodles & Rice",
+ "Set Meals",
+];
 export const byCategory=(category:string)=>menu.filter(item=>item.category.toLowerCase()===category.toLowerCase());
 export const getMenuItem=(id:string)=>menu.find(item=>item.id.toLowerCase()===id.toLowerCase());
