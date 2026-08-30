@@ -11,6 +11,7 @@ const params=new URLSearchParams(location.search);
 const table=params.get("table")||"";
 const view=params.get("view");
 const isBarcodeTable=/^[A-Za-z0-9-]{1,12}$/.test(table)&&!view;
+const isCustomerOnline=!table&&!view;
 
 if(isBarcodeTable){
  void import("../styles/customer.css");
@@ -40,6 +41,24 @@ function installPngDownloadFix(){
    window.open(link.href,"_blank","noopener,noreferrer");
   }
  });
+}
+
+function installCustomerOnlyNavigation(){
+ if(!isCustomerOnline)return;
+ const clean=()=>{
+  document.querySelectorAll<HTMLButtonElement>("button").forEach(button=>{
+   const label=(button.textContent||"").trim().toLowerCase();
+   if(label==="admin"||label==="driver")button.style.display="none";
+   if(label==="track")button.textContent="Tracking";
+  });
+  document.querySelectorAll<HTMLElement>('[role="tab"]').forEach(tab=>{
+   const label=(tab.textContent||"").trim().toLowerCase();
+   if(label==="admin"||label==="driver")tab.style.display="none";
+   if(label==="track")tab.textContent="Tracking";
+  });
+ };
+ clean();
+ new MutationObserver(clean).observe(document.body,{childList:true,subtree:true});
 }
 
 function installAdminStatusOptions(){
@@ -79,6 +98,7 @@ function mountAdminServiceRequests(){
 }
 
 installPngDownloadFix();
+installCustomerOnlyNavigation();
 installAdminStatusOptions();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
