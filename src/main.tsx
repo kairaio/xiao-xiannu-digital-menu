@@ -2,7 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import OnlineHome from "../app/page";
 import BarcodeMenu from "../app/layout";
+import {AdminServiceRequests} from "../components/service/AdminServiceRequests";
 import "../app/globals.css";
+import "../styles/service.css";
 import "./realtime";
 
 const params=new URLSearchParams(location.search);
@@ -60,9 +62,26 @@ function installAdminStatusOptions(){
  new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true});
 }
 
+function mountAdminServiceRequests(){
+ if(view!=="admin")return;
+ let attempts=0;
+ const mount=()=>{
+  const workspace=document.querySelector(".workspace");
+  if(!workspace){if(attempts++<30)window.setTimeout(mount,100);return}
+  if(document.getElementById("xx-admin-service-requests"))return;
+  const host=document.createElement("div");
+  host.id="xx-admin-service-requests";
+  const qr=workspace.querySelector(".table-qr-panel");
+  if(qr?.parentElement)qr.insertAdjacentElement("afterend",host);else workspace.prepend(host);
+  ReactDOM.createRoot(host).render(<React.StrictMode><AdminServiceRequests/></React.StrictMode>);
+ };
+ window.setTimeout(mount,0);
+}
+
 installPngDownloadFix();
 installAdminStatusOptions();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
  <React.StrictMode>{isBarcodeTable?<BarcodeMenu/>:<OnlineHome/>}</React.StrictMode>,
 );
+mountAdminServiceRequests();
