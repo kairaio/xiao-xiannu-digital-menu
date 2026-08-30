@@ -23,11 +23,13 @@ const statusOptions=[
 ];
 const statusLabel=(s:string)=>s==="Ready for Delivery"?"Ready":s==="Delivered"?"Served":s==="Paid"?"Selesai Dibayar":s;
 const money=(n:number)=>`$${Number(n||0).toFixed(2)}`;
+const tabSlug=(tab:Tab)=>tab.toLowerCase().replace(/ /g,"-");
+const slugTab=(slug:string|null):Tab=>TABS.find(tab=>tabSlug(tab)===slug)||"OVERVIEW";
 
 export default function AdminDashboard(){
  const params=new URLSearchParams(location.search);
  const initialOrder=params.get("order")||"";
- const [tab,setTab]=useState<Tab>(initialOrder?"ORDERS":"OVERVIEW");
+ const [tab,setTab]=useState<Tab>(initialOrder?"ORDERS":slugTab(params.get("panel")));
  const [orders,setOrders]=useState<Order[]>(()=>readOrders());
  const [selectedOrder,setSelectedOrder]=useState(initialOrder);
  const [qrTable,setQrTable]=useState("08");
@@ -35,11 +37,32 @@ export default function AdminDashboard(){
  const [historySearch,setHistorySearch]=useState("");
  const [settings,setSettings]=useState(()=>{try{return JSON.parse(localStorage.getItem("xx-admin-settings")||"{}") }catch{return {}}});
 
+ const navigateTab=(next:Tab,orderNumber?:string)=>{
+  setTab(next);
+  if(orderNumber!==undefined)setSelectedOrder(orderNumber);
+  const query=new URLSearchParams(location.search);
+  query.set("view","admin");
+  query.set("panel",tabSlug(next));
+  if(next==="ORDERS"&&orderNumber)query.set("order",orderNumber);else if(next!=="ORDERS")query.delete("order");
+  history.pushState(null,"",`${location.pathname}?${query.toString()}`);
+ };
+
  useEffect(()=>{
   const sync=()=>setOrders(readOrders());
   window.addEventListener("storage",sync);
   const timer=window.setInterval(sync,1000);
   return()=>{window.removeEventListener("storage",sync);window.clearInterval(timer)};
+ },[]);
+
+ useEffect(()=>{
+  const onPop=()=>{
+   const query=new URLSearchParams(location.search);
+   const order=query.get("order")||"";
+   setSelectedOrder(order);
+   setTab(order?"ORDERS":slugTab(query.get("panel")));
+  };
+  window.addEventListener("popstate",onPop);
+  return()=>window.removeEventListener("popstate",onPop);
  },[]);
 
  const writeOrders=(next:Order[])=>{
@@ -59,8 +82,8 @@ export default function AdminDashboard(){
   return [...map.entries()].sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true}));
  },[active]);
  const deliveryOrders=useMemo(()=>orders.filter(o=>o.type==="Delivery"),[orders]);
- const history=useMemo(()=>orders.filter(o=>o.status==="Paid"||o.status==="Rejected"||(o.type==="Delivery"&&o.status==="Delivered")),[orders]);
- const filteredHistory=history.filter(o=>`${o.number} ${o.customer} ${o.table}`.toLowerCase().includes(historySearch.toLowerCase()));
+ const historyOrders=useMemo(()=>orders.filter(o=>o.status==="Paid"||o.status==="Rejected"||(o.type==="Delivery"&&o.status==="Delivered")),[orders]);
+ const filteredHistory=historyOrders.filter(o=>`${o.number} ${o.customer} ${o.table}`.toLowerCase().includes(historySearch.toLowerCase()));
  const selected=orders.find(o=>o.number===selectedOrder);
 
  useEffect(()=>{
@@ -71,32 +94,37 @@ export default function AdminDashboard(){
  const saveSettings=(next:any)=>{setSettings(next);localStorage.setItem("xx-admin-settings",JSON.stringify(next))};
 
  return <div className="xx-admin-shell">
-  <header className="xx-admin-header">
-   <div><div className="xx-admin-demo">DEMO</div><h1>Japanese Restaurant</h1><p>Admin Dashboard</p></div>
-   <div className="xx-admin-live"><span>🔔 {active.length}</span><span className="xx-online-dot"/> Online</div>
-  </header>
+  <aside className="xx-admin-sidebar">
+   <div className="xx-sidebar-brand"><div className="xx-admin-demo">DEMO</div><strong>Japanese Restaurant</strong><span>Admin Dashboard</span></div>
+   <nav className="xx-admin-nav">{TABS.map(name=><button key={name} className={tab===name?"active":""} onClick={()=>navigateTab(name)}><span className="xx-nav-dot"/>{name}</button>)}</nav>
+   <div className="xx-sidebar-footer"><span className="xx-online-dot"/> System Online</div>
+  </aside>
 
-  <nav className="xx-admin-tabs">{TABS.map(name=><button key={name} className={tab===name?"active":""} onClick={()=>setTab(name)}>{name}</button>)}</nav>
+  <div className="xx-admin-workspace">
+   <header className="xx-admin-header">
+    <div><div className="xx-admin-breadcrumb">ADMIN / {tab}</div><h1>{tab.replace("QR CODES","QR Codes").replace(/^./,c=>c.toUpperCase()).toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase())}</h1><p>Japanese Restaurant · Admin Dashboard</p></div>
+    <div className="xx-admin-live"><span>🔔 {active.length}</span><span className="xx-online-dot"/> Online</div>
+   </header>
 
-  <main className="xx-admin-main">
+   <main className="xx-admin-main">
    {tab==="OVERVIEW"&&<>
     <section className="xx-stat-grid">
      <Stat title="Orders Today" value={String(todayOrders.length)}/><Stat title="Revenue Today" value={money(revenue)}/>
      <Stat title="Active Orders" value={String(active.length)}/><Stat title="Active Tables" value={String(tables.length)}/>
     </section>
     <Panel title="Live Operations"><div className="xx-quick-grid">
-     <button onClick={()=>setTab("ORDERS")}>Open Orders <b>{active.length}</b></button>
-     <button onClick={()=>setTab("TABLES")}>Active Tables <b>{tables.length}</b></button>
-     <button onClick={()=>setTab("SERVICE")}>Waiter / Bill Requests</button>
-     <button onClick={()=>setTab("DELIVERY")}>Delivery <b>{deliveryOrders.filter(o=>!["Paid","Rejected","Delivered"].includes(o.status)).length}</b></button>
+     <button onClick={()=>navigateTab("ORDERS")}>Open Orders <b>{active.length}</b></button>
+     <button onClick={()=>navigateTab("TABLES")}>Active Tables <b>{tables.length}</b></button>
+     <button onClick={()=>navigateTab("SERVICE")}>Waiter / Bill Requests</button>
+     <button onClick={()=>navigateTab("DELIVERY")}>Delivery <b>{deliveryOrders.filter(o=>!["Paid","Rejected","Delivered"].includes(o.status)).length}</b></button>
     </div></Panel>
-    <Panel title="Latest Orders"><OrderTable orders={orders.slice(0,6)} onOpen={n=>{setSelectedOrder(n);setTab("ORDERS")}}/></Panel>
+    <Panel title="Latest Orders"><OrderTable orders={orders.slice(0,6)} onOpen={n=>navigateTab("ORDERS",n)}/></Panel>
    </>}
 
    {tab==="ORDERS"&&<Panel title="Orders">
-    <OrderTable orders={orders.filter(o=>!["Paid","Rejected"].includes(o.status))} onOpen={setSelectedOrder}/>
+    <OrderTable orders={orders.filter(o=>!["Paid","Rejected"].includes(o.status))} onOpen={n=>navigateTab("ORDERS",n)}/>
     {selected&&<div className="xx-order-detail">
-     <div className="xx-order-detail-head"><div><small>ORDER</small><h3>#{selected.number}</h3></div><button onClick={()=>setSelectedOrder("")}>Close</button></div>
+     <div className="xx-order-detail-head"><div><small>ORDER</small><h3>#{selected.number}</h3></div><button onClick={()=>{setSelectedOrder("");navigateTab("ORDERS","")}}>Close</button></div>
      <div className="xx-detail-grid"><span><b>{selected.customer}</b><small>{selected.phone}</small></span><span><b>{selected.type}</b><small>{selected.table?`Table ${selected.table}`:selected.address||"-"}</small></span><span><b>{money(selected.total)}</b><small>{new Date(selected.createdAt).toLocaleString()}</small></span></div>
      <div className="xx-items">{(selected.items||[]).map((item:any,i)=><div key={i}><span>{item.qty||1}× {item.name}</span><b>{money((item.price||0)*(item.qty||1))}</b></div>)}</div>
      <div className="xx-order-actions">
@@ -109,7 +137,7 @@ export default function AdminDashboard(){
 
    {tab==="TABLES"&&<Panel title="Tables">
     {tables.length?<div className="xx-table-grid">{tables.map(([tableNo,list])=>{
-     const total=list.reduce((sum,o)=>sum+Number(o.total||0),0);return <button key={tableNo} onClick={()=>{setSelectedOrder(list[0].number);setTab("ORDERS")}}><span>TABLE</span><strong>{tableNo}</strong><small>{list.length} active order{list.length>1?"s":""}</small><b>{money(total)}</b></button>
+     const total=list.reduce((sum,o)=>sum+Number(o.total||0),0);return <button key={tableNo} onClick={()=>navigateTab("ORDERS",list[0].number)}><span>TABLE</span><strong>{tableNo}</strong><small>{list.length} active order{list.length>1?"s":""}</small><b>{money(total)}</b></button>
     })}</div>:<Empty text="No active dine-in tables."/>}
    </Panel>}
 
@@ -118,7 +146,7 @@ export default function AdminDashboard(){
    {tab==="DELIVERY"&&<Panel title="Delivery">
     {deliveryOrders.length?<div className="xx-delivery-list">{deliveryOrders.map(o=><article key={o.number}>
      <div><small>#{o.number}</small><h3>{o.customer}</h3><p>{o.address||"No address"}</p><span className="xx-status">{statusLabel(o.status)}</span></div>
-     <div className="xx-delivery-actions">{o.location&&<a href={o.location} target="_blank" rel="noreferrer">Customer Location</a>}<a href={`?view=track&order=${encodeURIComponent(o.number)}`} target="_blank" rel="noreferrer">Live Tracking</a><button onClick={()=>{setSelectedOrder(o.number);setTab("ORDERS")}}>Manage</button></div>
+     <div className="xx-delivery-actions">{o.location&&<a href={o.location} target="_blank" rel="noreferrer">Customer Location</a>}<a href={`?view=track&order=${encodeURIComponent(o.number)}`} target="_blank" rel="noreferrer">Live Tracking</a><button onClick={()=>navigateTab("ORDERS",o.number)}>Manage</button></div>
     </article>)}</div>:<Empty text="No delivery orders yet."/>}
    </Panel>}
 
@@ -134,7 +162,7 @@ export default function AdminDashboard(){
 
    {tab==="HISTORY"&&<Panel title="History">
     <input className="xx-search" placeholder="Search order, customer or table..." value={historySearch} onChange={e=>setHistorySearch(e.target.value)}/>
-    <OrderTable orders={filteredHistory} onOpen={n=>{setSelectedOrder(n);setTab("ORDERS")}}/>
+    <OrderTable orders={filteredHistory} onOpen={n=>navigateTab("ORDERS",n)}/>
    </Panel>}
 
    {tab==="SETTINGS"&&<Panel title="Settings"><div className="xx-settings-grid">
@@ -143,7 +171,8 @@ export default function AdminDashboard(){
     <label>Delivery Fee<input type="number" value={settings.deliveryFee??0} onChange={e=>saveSettings({...settings,deliveryFee:Number(e.target.value)})}/></label>
     <label>Payment Methods<input value={settings.paymentMethods||"Cash / Transfer"} onChange={e=>saveSettings({...settings,paymentMethods:e.target.value})}/></label>
    </div><p className="xx-panel-note">Demo configuration is saved on this admin device.</p></Panel>}
-  </main>
+   </main>
+  </div>
  </div>;
 }
 
