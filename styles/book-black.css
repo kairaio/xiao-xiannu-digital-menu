@@ -1,0 +1,28 @@
+.menu-book-screen{background:radial-gradient(circle at 50% 0,rgba(201,169,110,.08),transparent 28%),linear-gradient(180deg,#090909 0%,#050505 100%);color:#f7f2e8;min-height:calc(100vh - 72px)}
+.book-toolbar{padding:8px 0 22px;border-bottom:1px solid rgba(201,169,110,.18)}
+.book-toolbar h1{color:#f7f2e8;letter-spacing:.01em}
+.book-toolbar p{color:#c9a96e}
+.menu-search{background:#0d0d0d;border-color:rgba(201,169,110,.24);box-shadow:inset 0 0 0 1px rgba(255,255,255,.015)}
+.category-pills{padding:18px 0 16px}
+.category-pills button{background:#0b0b0b;color:#b9b0a3;border:1px solid rgba(201,169,110,.16);box-shadow:0 8px 24px rgba(0,0,0,.24)}
+.category-pills button:hover{color:#f7f2e8;border-color:rgba(201,169,110,.46)}
+.category-pills button.active{background:linear-gradient(135deg,#e2c78f,#b58d4f);color:#090909;border-color:#d7ba7c;box-shadow:0 8px 30px rgba(201,169,110,.18)}
+.book-shell{padding:8px 0}
+.book-pages{gap:20px}
+.book-page{background:linear-gradient(145deg,#111 0%,#090909 56%,#070707 100%);color:#f7f2e8;border:1px solid rgba(201,169,110,.28);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 24px 70px rgba(0,0,0,.5)}
+.book-page:after{background:linear-gradient(90deg,rgba(201,169,110,.06),transparent 8%,transparent 92%,rgba(201,169,110,.05))}
+.page-number{color:#8f806b;border-bottom:1px solid rgba(201,169,110,.08)}
+.book-image{background:#030303;border:1px solid rgba(201,169,110,.12);border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.34)}
+.book-image img{filter:saturate(.94) contrast(1.03)}
+.book-image span{background:rgba(5,5,5,.9);color:#e2c78f;border:1px solid rgba(201,169,110,.26);border-radius:999px}
+.book-copy{background:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+.book-copy h2{color:#f7f2e8;font-weight:600}
+.book-copy p{color:#a69c8f}
+.book-copy>strong{color:#e2c78f;font-size:22px}
+.book-copy small{color:#8d8378}
+.book-qty button{border-color:rgba(201,169,110,.34);background:#0b0b0b;color:#f7f2e8}
+.book-qty button:hover{border-color:#c9a96e;color:#e2c78f}
+.book-qty .add-mini{background:linear-gradient(135deg,#e2c78f,#b58d4f);color:#090909;border-color:transparent;font-weight:900}
+.book-arrow{background:rgba(7,7,7,.94);border-color:rgba(201,169,110,.34);color:#e2c78f;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.book-hint{color:#756d63}
+@media(max-width:760px){.menu-book-screen{padding-left:12px;padding-right:12px}.book-toolbar{align-items:stretch}.book-page{border-radius:12px}.book-image{margin:0 14px;height:360px}.book-copy{padding:20px 16px 24px}.book-copy h2{font-size:28px}}
