@@ -1,11 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Home from "../app/page";
-import "../app/globals.css";
+import CustomerLayout from "../app/layout";
+import "../styles/customer.css";
 import "./realtime";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Home />
-  </React.StrictMode>,
+ <React.StrictMode><CustomerLayout/></React.StrictMode>,
 );

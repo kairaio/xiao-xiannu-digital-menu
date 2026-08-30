@@ -1,0 +1,2 @@
+import {ShoppingBag} from "lucide-react";
+export function Header({table,cartCount,onHome,onCart}:{table:string;cartCount:number;onHome:()=>void;onCart:()=>void}){return <header className="customer-header"><button className="customer-brand" onClick={onHome}><span>小仙女</span><small>JAPANESE CUISINE</small></button><div className="header-actions">{table&&<span className="table-badge">TABLE {table}</span>}<button className="header-cart" onClick={onCart}><ShoppingBag/><b>{cartCount}</b></button></div></header>}
