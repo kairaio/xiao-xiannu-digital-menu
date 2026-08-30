@@ -10,7 +10,10 @@ const table=params.get("table")||"";
 const view=params.get("view");
 const isBarcodeTable=/^[A-Za-z0-9-]{1,12}$/.test(table)&&!view;
 
-if(isBarcodeTable) void import("../styles/customer.css");
+if(isBarcodeTable){
+ void import("../styles/customer.css");
+ void import("../styles/book-black.css");
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
  <React.StrictMode>{isBarcodeTable?<BarcodeMenu/>:<OnlineHome/>}</React.StrictMode>,
