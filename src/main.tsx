@@ -1,14 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import CustomerLayout from "../app/layout";
-import OperationsHome from "../app/page";
+import Home from "../app/page";
 import "../app/globals.css";
-import "../styles/customer.css";
 import "./realtime";
 
-const view=new URLSearchParams(location.search).get("view");
-const operations=view==="admin"||view==="driver";
+function hideOperationsNavigation(){
+ const clean=()=>{
+  document.querySelectorAll("button").forEach(button=>{
+   const label=(button.textContent||"").trim().toLowerCase();
+   if(label==="admin"||label==="driver") button.style.display="none";
+   if(label==="track") button.textContent="Order";
+  });
+ };
+ clean();
+ const observer=new MutationObserver(clean);
+ observer.observe(document.body,{childList:true,subtree:true});
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
- <React.StrictMode>{operations?<OperationsHome/>:<CustomerLayout/>}</React.StrictMode>,
+ <React.StrictMode><Home/></React.StrictMode>,
 );
+
+window.setTimeout(hideOperationsNavigation,0);
