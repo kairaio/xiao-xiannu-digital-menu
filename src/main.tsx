@@ -3,8 +3,10 @@ import ReactDOM from "react-dom/client";
 import OnlineHome from "../app/page";
 import BarcodeMenu from "../app/layout";
 import {AdminServiceRequests} from "../components/service/AdminServiceRequests";
+import {installDeliveryVerification} from "./deliveryVerification";
 import "../app/globals.css";
 import "../styles/service.css";
+import "../styles/delivery-verification.css";
 import "./realtime";
 
 const params=new URLSearchParams(location.search);
@@ -100,6 +102,7 @@ function mountAdminServiceRequests(){
 installPngDownloadFix();
 installCustomerOnlyNavigation();
 installAdminStatusOptions();
+installDeliveryVerification();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
  <React.StrictMode>{isBarcodeTable?<BarcodeMenu/>:<OnlineHome/>}</React.StrictMode>,
