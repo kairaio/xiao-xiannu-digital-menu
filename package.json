@@ -2,7 +2,9 @@
   "name": "xiao-xiannu-digital-menu",
   "version": "0.1.0",
   "private": true,
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "prebuild": "cp source-index.html index.html",
     "dev": "vite --config vite.github.config.ts",
@@ -23,6 +25,7 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^1.31.0",
     "next-themes": "^0.4.6",
+    "qrcode": "^1.5.4",
     "radix-ui": "^1.6.7",
     "react": "19.2.6",
     "react-day-picker": "^10.0.1",
@@ -38,6 +41,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
@@ -48,5 +52,5 @@
     "vite": "8.0.13"
   },
   "type": "module",
-  "displayName": "\u5c0f\u4ed9\u5973 Japanese Restaurant \u2014 Digital Menu + Delivery Pro"
+  "displayName": "小仙女 Japanese Restaurant — Digital Menu + Delivery Pro"
 }
