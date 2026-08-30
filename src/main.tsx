@@ -32,23 +32,57 @@ function customerQrExperience(){
    const h2=checkout.querySelector(".modal-title h2"); if(h2)h2.textContent="CONFIRM YOUR ORDER";
    const eyebrow=checkout.querySelector(".modal-title .eyebrow"); if(eyebrow)eyebrow.textContent="ORDER TYPE";
    checkout.querySelectorAll(".type-option").forEach(option=>{if((option.textContent||"").trim()==="Pickup") option.childNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)n.textContent="Take Away"})});
-   const name=checkout.querySelector('input:not([type])[required]') as HTMLInputElement|null;
-   const required=[...checkout.querySelectorAll('input[required]')] as HTMLInputElement[];
-   required.slice(0,2).forEach((input,i)=>{if(!input.value){const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value")?.set;setter?.call(input,i===0?"Table Guest":"-");input.dispatchEvent(new Event("input",{bubbles:true}))}});
+
+   // Customer name and phone are intentionally hidden in QR-table checkout.
+   // They must not keep native HTML required validation, otherwise the hidden
+   // fields block the React form submit before CONFIRM ORDER can run.
+   checkout.querySelectorAll(".form-grid input[required]").forEach(input=>{
+    (input as HTMLInputElement).required=false;
+    input.removeAttribute("required");
+   });
+
    const tableInput=[...checkout.querySelectorAll("input")].find(i=>(i.parentElement?.textContent||"").includes("Table Number")) as HTMLInputElement|undefined;
-   if(tableInput){const label=tableInput.parentElement;if(label){label.childNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE&&n.textContent?.includes("Table Number"))n.textContent="TABLE NUMBER *"});if(!label.querySelector(".qr-help")){const s=document.createElement("small");s.className="qr-help";s.textContent="Auto detected from QR";label.appendChild(s)}}}
+   if(tableInput){
+    const label=tableInput.parentElement;
+    if(label){
+     label.childNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE&&n.textContent?.includes("Table Number"))n.textContent="TABLE NUMBER *"});
+     if(!label.querySelector(".qr-help")){
+      const s=document.createElement("small");s.className="qr-help";s.textContent="Auto detected from QR";label.appendChild(s);
+     }
+    }
+   }
+
    const notes=[...checkout.querySelectorAll("textarea")].at(-1) as HTMLTextAreaElement|undefined;
-   if(notes){notes.placeholder="Additional request...";const label=notes.parentElement;if(label){label.childNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)n.textContent="NOTE "})}}
+   if(notes){
+    notes.placeholder="Additional request...";
+    const label=notes.parentElement;
+    if(label)label.childNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)n.textContent="NOTE "});
+   }
+
    if(!checkout.querySelector(".qr-extra")){
     const total=checkout.querySelector(".checkout-total");
-    const extra=document.createElement("div");extra.className="qr-extra";extra.innerHTML='<h3>TAKE AWAY</h3><label class="qr-pack"><input type="checkbox" id="pack-takeaway"> <span>Pack this order as Take Away<small class="qr-help">Optional</small></span></label>';
+    const extra=document.createElement("div");
+    extra.className="qr-extra";
+    extra.innerHTML='<h3>TAKE AWAY</h3><label class="qr-pack"><input type="checkbox" id="pack-takeaway"> <span>Pack this order as Take Away<small class="qr-help">Optional</small></span></label>';
     total?.parentElement?.insertBefore(extra,total);
    }
   }
-  document.querySelectorAll(".timeline span").forEach(span=>{if(span.textContent==="Ready to Serve"||span.textContent==="Ready for Pickup")span.textContent="Ready";if(span.textContent==="Picked Up")span.textContent="Served"});
+
+  document.querySelectorAll(".timeline span").forEach(span=>{
+   if(span.textContent==="Ready to Serve"||span.textContent==="Ready for Pickup")span.textContent="Ready";
+   if(span.textContent==="Picked Up")span.textContent="Served";
+  });
+
   const tracking=document.querySelector(".tracking-bottom");
   if(tracking&&!tracking.querySelector(".qr-order-more")){
-   const button=document.createElement("button");button.className="qr-order-more primary";button.textContent="+ ORDER MORE";button.onclick=()=>{history.replaceState(null,"",location.pathname+location.search.replace(/([?&])view=track(&|$)/,"$1").replace(/([?&])order=[^&]+/,""));location.reload()};tracking.appendChild(button);
+   const button=document.createElement("button");
+   button.className="qr-order-more primary";
+   button.textContent="+ ORDER MORE";
+   button.onclick=()=>{
+    history.replaceState(null,"",location.pathname+location.search.replace(/([?&])view=track(&|$)/,"$1").replace(/([?&])order=[^&]+/,""));
+    location.reload();
+   };
+   tracking.appendChild(button);
   }
  };
  clean();
