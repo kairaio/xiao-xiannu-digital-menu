@@ -7,7 +7,6 @@ const STORAGE_KEY="xx-orders";
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{realtime:{params:{eventsPerSecond:10}}});
 
 type LocalOrder={number:string;customer:string;phone:string;type:string;address:string;location:string;table:string;requestedTime:string;notes:string;deliveryFee:number;items:unknown[];subtotal:number;total:number;status:string;driver:string;createdAt:string};
-
 type DbOrder={number:string;customer:string;phone:string;order_type:string;address:string;location:string;table_number:string;requested_time:string;notes:string;delivery_fee:number;items:unknown[];subtotal:number;total:number;status:string;driver:string;created_at:string};
 
 const toDb=(o:LocalOrder)=>({
@@ -19,30 +18,59 @@ const fromDb=(o:DbOrder):LocalOrder=>({
 const readLocal=():LocalOrder[]=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch{return[]}};
 let remoteWrite=false;
 let lastSnapshot="";
-const writeLocal=(orders:LocalOrder[])=>{remoteWrite=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(orders));lastSnapshot=JSON.stringify(orders);window.dispatchEvent(new Event("storage"));remoteWrite=false};
+let syncPromise:Promise<void>=Promise.resolve();
+const writeLocal=(orders:LocalOrder[])=>{remoteWrite=true;const snapshot=JSON.stringify(orders);localStorage.setItem(STORAGE_KEY,snapshot);lastSnapshot=snapshot;window.dispatchEvent(new Event("storage"));remoteWrite=false};
+
+async function fetchRemoteOrders(){
+ const {data,error}=await supabase.from("orders").select("*").order("created_at",{ascending:false});
+ if(error){console.error("[Supabase] pull orders failed",error);throw error}
+ return (data||[]).map(fromDb);
+}
 
 async function pullOrders(){
- const {data,error}=await supabase.from("orders").select("*").order("created_at",{ascending:false});
- if(error){console.error("[Supabase] pull orders failed",error);return}
- const incoming=(data||[]).map(fromDb);
- if(JSON.stringify(incoming)!==JSON.stringify(readLocal()))writeLocal(incoming);
+ try{
+  const incoming=await fetchRemoteOrders();
+  if(JSON.stringify(incoming)!==JSON.stringify(readLocal()))writeLocal(incoming);
+ }catch{}
 }
 
 async function pushOrders(orders:LocalOrder[]){
- if(!orders.length)return;
+ if(!orders.length)return true;
  const {error}=await supabase.from("orders").upsert(orders.map(toDb),{onConflict:"number"});
- if(error)console.error("[Supabase] push orders failed",error);
+ if(error){console.error("[Supabase] push orders failed",error);return false}
+ return true;
+}
+
+function queueLocalSync(){
+ if(remoteWrite)return;
+ const current=localStorage.getItem(STORAGE_KEY)||"[]";
+ if(current===lastSnapshot)return;
+ lastSnapshot=current;
+ syncPromise=syncPromise.then(async()=>{
+  const ok=await pushOrders(readLocal());
+  if(ok)await pullOrders();
+ }).catch(error=>console.error("[Supabase] queued sync failed",error));
 }
 
 function installLocalStorageBridge(){
  lastSnapshot=localStorage.getItem(STORAGE_KEY)||"[]";
- window.setInterval(()=>{
-  if(remoteWrite)return;
-  const current=localStorage.getItem(STORAGE_KEY)||"[]";
-  if(current===lastSnapshot)return;
-  lastSnapshot=current;
-  pushOrders(readLocal());
- },500);
+ window.addEventListener("storage",queueLocalSync);
+ window.addEventListener("online",()=>{lastSnapshot="";queueLocalSync()});
+ window.setInterval(queueLocalSync,1500);
+}
+
+async function reconcileOnBoot(){
+ let remote:LocalOrder[]=[];
+ try{remote=await fetchRemoteOrders()}catch{return}
+ const local=readLocal();
+ const remoteNumbers=new Set(remote.map(o=>o.number));
+ const localOnly=local.filter(o=>o.number&&!remoteNumbers.has(o.number));
+ if(localOnly.length){
+  const ok=await pushOrders(localOnly);
+  if(!ok)return;
+  try{remote=await fetchRemoteOrders()}catch{}
+ }
+ if(JSON.stringify(remote)!==JSON.stringify(readLocal()))writeLocal(remote);
 }
 
 async function requestAdminNotifications(){
@@ -62,7 +90,7 @@ function installRealtime(){
   .on("postgres_changes",{event:"INSERT",schema:"public",table:"orders"},payload=>{const order=fromDb(payload.new as DbOrder);notifyOrder(order);pullOrders()})
   .on("postgres_changes",{event:"UPDATE",schema:"public",table:"orders"},()=>pullOrders())
   .on("postgres_changes",{event:"DELETE",schema:"public",table:"orders"},()=>pullOrders())
-  .subscribe();
+  .subscribe(status=>console.info("[Supabase] orders realtime",status));
 
  supabase.channel("xiao-xiannu-driver-locations")
   .on("postgres_changes",{event:"*",schema:"public",table:"driver_locations"},()=>window.dispatchEvent(new CustomEvent("xx-driver-location")))
@@ -100,15 +128,14 @@ async function renderLiveGps(){
 
 async function boot(){
  installLocalStorageBridge();
- await pullOrders();
- await pushOrders(readLocal());
+ await reconcileOnBoot();
  installRealtime();
  requestAdminNotifications();
  watchView();
  renderLiveGps();
  window.addEventListener("xx-driver-location",renderLiveGps);
  window.setInterval(renderLiveGps,5000);
- console.info("[Xiao Xiannu] Supabase realtime online");
+ console.info("[Xiao Xiannu] persistent realtime order system online");
 }
 
 boot().catch(error=>console.error("[Xiao Xiannu] realtime boot failed",error));
