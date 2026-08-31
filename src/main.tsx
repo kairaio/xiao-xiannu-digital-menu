@@ -3,18 +3,20 @@ import ReactDOM from "react-dom/client";
 import OnlineHome from "../app/page";
 import BarcodeMenu from "../app/layout";
 import AdminDashboard from "../components/admin/AdminDashboard";
+import RestaurantHome from "../components/home/RestaurantHome";
 import {installDeliveryVerification} from "./deliveryVerification";
 import "../app/globals.css";
 import "../styles/service.css";
 import "../styles/delivery-verification.css";
 import "../styles/admin-dashboard.css";
+import "../styles/restaurant-home.css";
 import "./realtime";
 
 const params=new URLSearchParams(location.search);
 const table=params.get("table")||"";
 const view=params.get("view");
 const isBarcodeTable=/^[A-Za-z0-9-]{1,12}$/.test(table)&&!view;
-const isCustomerOnline=!table&&!view;
+const isLanding=!table&&!view;
 const isAdmin=view==="admin";
 
 if(isBarcodeTable){
@@ -48,7 +50,7 @@ function installPngDownloadFix(){
 }
 
 function installCustomerOnlyNavigation(){
- if(!isCustomerOnline)return;
+ if(isLanding||isAdmin||isBarcodeTable)return;
  const clean=()=>{
   document.querySelectorAll<HTMLButtonElement>("button").forEach(button=>{
    const label=(button.textContent||"").trim().toLowerCase();
@@ -70,5 +72,5 @@ installCustomerOnlyNavigation();
 installDeliveryVerification();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
- <React.StrictMode>{isAdmin?<AdminDashboard/>:isBarcodeTable?<BarcodeMenu/>:<OnlineHome/>}</React.StrictMode>,
+ <React.StrictMode>{isAdmin?<AdminDashboard/>:isBarcodeTable?<BarcodeMenu/>:isLanding?<RestaurantHome/>:<OnlineHome/>}</React.StrictMode>,
 );
